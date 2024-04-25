@@ -7,6 +7,7 @@ import sys
 from menus.startMenu import start_menu
 from menus.shopMenu import shop_menu
 from menus.homeMenu import home_menu
+from definitions import rps
 
 
 class game:
@@ -46,38 +47,38 @@ class game:
         code = menu.curses_main(w)
         show_end_scr = False
         while True:
-            if code == 0:
+            if code == rps.rock:
                 self.last_turn = [0, rand.randint(0,2)]
                 self.resources[0] += self.game_logic(self.last_turn)*self.increases[0]*self.increases[3]
                 code = 6
-            elif code == 1:
+            elif code == rps.paper:
                 self.last_turn = [1, rand.randint(0,2)]
                 self.resources[1] += self.game_logic(self.last_turn)*self.increases[1]*self.increases[3]
                 code = 6
-            elif code == 2:
+            elif code == rps.scissors:
                 self.last_turn = [2, rand.randint(0,2)]
                 self.resources[2] += self.game_logic(self.last_turn)*self.increases[2]*self.increases[3]
                 code = 6
-            elif code == 3:
+            elif code == rps.shop:
                 menu = shop_menu(self.resources, self.items)
                 code = menu.shop_menu(w)
-            elif code == 4:
+            elif code == rps.end:
                 if self.end_scr:
                     self.end_screen(w)
                     code = 6
                 else:
                     show_end_scr = True
                     code = 6
-            elif code == 5:
+            elif code == rps.save:
                 self.write_save()
                 sys.exit()
-            elif code == 6:
+            elif code == rps.home:
                 menu = home_menu(self.last_turn, self.resources, show_end_scr)
                 code = menu.home(w)
                 self.show_end_scr = False
             else:
                 self.buy(code, False)
-                code = 3
+                code = rps.shop
 
     def game_logic(self, input):
         """If ig_ran = true, ingores random and takes a two integer list entry
@@ -88,13 +89,13 @@ class game:
         ai_input = input[1]
         input = input[0]
         
-        if ai_input == 0 and input == 1 or\
-        ai_input == 1 and input == 2 or\
-        ai_input == 2 and input == 0:
+        if ai_input == rps.rock and input == rps.paper or\
+        ai_input == rps.paper and input == rps.scissors or\
+        ai_input == rps.scissors and input == rps.rock:
             return True
-        elif input == 0 and ai_input == 1 or\
-        input == 1 and ai_input == 2 or\
-        input == 2 and ai_input == 0:
+        elif input == rps.rock and ai_input == rps.paper or\
+        input == rps.paper and ai_input == rps.scissors or\
+        input == rps.scissors and ai_input == rps.rock:
             return False
         elif input == ai_input:
             return True
@@ -202,7 +203,7 @@ class game:
         # https://stackoverflow.com/questions/8220108/how-do-i-check-the-operating-system-in-python
         # ^ used for most platform checking
 
-        f.write(f"{time.time()}\n{self.resources[0]}\n{self.resources[1]}\n{self.resources[2]}\n{self.rate}\n{nl.join([i[0] for i in self.items_purchased])}")
+        f.write(f"{time.time()}\n{self.resources[rps.rock]}\n{self.resources[rps.paper]}\n{self.resources[rps.scissors]}\n{self.rate}\n{nl.join([i[0] for i in self.items_purchased])}")
         f.close()
 
     def read_save(self):
