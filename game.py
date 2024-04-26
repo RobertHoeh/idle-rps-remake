@@ -7,8 +7,8 @@ import random as rand
 from menus.startMenu import start_menu
 from menus.shopMenu import shop_menu
 from menus.homeMenu import home_menu
-from definitions import rps
-from definition import items
+from definitions import rps, items
+from graphics import end_screen
 
 
 class game:
@@ -45,25 +45,25 @@ class game:
             if code == rps.rock:
                 self.last_turn = [0, rand.randint(0,2)]
                 self.resources[0] += self.game_logic(self.last_turn)*self.increases[0]*self.increases[3]
-                code = 6
+                code = rps.home
             elif code == rps.paper:
                 self.last_turn = [1, rand.randint(0,2)]
                 self.resources[1] += self.game_logic(self.last_turn)*self.increases[1]*self.increases[3]
-                code = 6
+                code = rps.home
             elif code == rps.scissors:
                 self.last_turn = [2, rand.randint(0,2)]
                 self.resources[2] += self.game_logic(self.last_turn)*self.increases[2]*self.increases[3]
-                code = 6
+                code = rps.home
             elif code == rps.shop:
                 menu = shop_menu(self.resources, self.items)
                 code = menu.shop_menu(w)
             elif code == rps.end:
                 if self.end_scr:
-                    self.end_screen(w)
-                    code = 6
+                    self.display_end_screen(w)
+                    code = rps.home
                 else:
                     show_end_scr = True
-                    code = 6
+                    code = rps.home
             elif code == rps.save:
                 self.write_save()
                 sys.exit()
@@ -118,46 +118,10 @@ class game:
         if item[0] == "End Screen":
             self.end_scr = True
 
-    def prep_end_screen(self):
-        graphics_list = ["""\
-│    _______   │       _______    │
-│---'   ____)  │ ____(____    '---│
-│      (_____) │(______           │
-│      (_____) │(_______          │
-│      (____)  │ (_______         │
-│---.__(___)   │   (__________.---│
-├──────────────┴──────────────────┤
-""",
-                          """\
-│           _______               │
-│       ---'   ____)____          │
-│                 ______)         │
-│              __________)        │
-│             (____)              │
-│       ---.__(___)               │
-"""]
-        return(["┌──────────────┬──────────────────┐"]+
-               graphics_list[0].splitlines()+
-               graphics_list[1].splitlines()+
-               ["├─────────────────────────────────┤",
-               "│So, what exactly is this screen  │",
-               "│that you just unlocked? Nothing  │",
-               "│really, just a generic endscreen │",
-               "│and just so happens to be a      │",
-               "│citation page for the rock paper │",
-               "│ascii art ;)                     │",
-               "├─────────────────────────────────┤",
-               "│https://gist.github.com/wynand100│",
-               "│4/b5c521ea8392e9c6bfe101b025c39ab│",
-               "│e                                │",
-               "├─────────────────────────────────┤",
-               "│      PRESS ANY KEY TO EXIT      │",
-               "└─────────────────────────────────┘"])
-
-    def end_screen(self, w):
+    def display_end_screen(self, w):
         w.clear()
         char = -1
-        graphics = self.prep_end_screen()
+        graphics = end_screen
         for p, i in enumerate(graphics):
             w.addstr(p, 0, i)
         while char == -1:

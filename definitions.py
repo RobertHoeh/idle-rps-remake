@@ -10,6 +10,12 @@ class rps(Enum):
     save = 5
     home = 6
 
+class status(Enum):
+    win = 1
+    loss = 2
+    invalid = -1
+    tie = 3
+
 @dataclass
 class item:
     name: string
