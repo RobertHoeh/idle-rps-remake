@@ -1,5 +1,9 @@
 import curses
 from menuAbstract import MenuAbstract
+from graphics import base_str
+from graphics import prep_items_str
+from graphics import prep_submenu_text
+from graphics import prep_details_str
 
 class shop_menu(MenuAbstract):
     def __init__(self, resources, items_avail):
@@ -15,25 +19,7 @@ class shop_menu(MenuAbstract):
         self.items_avail = items_avail
         self.cursor_pos = 0
         self.submenu = False
-        self.base_str = """┌────────────────────────────────────────┐
-│                  quit                  │
-└────────────────────────────────────────┘
-┌──────────────────────────────┬─────────┐
-│                              │         │
-│                              │         │
-│                              │         │
-│                              │         │
-│                              │         │
-│                              │         │
-│                              │         │
-│                              │         │
-│                              │         │
-└──────────────────────────────┴─────────┘"""
-        try:
-            self.items_str = "".join([f"│┌────────────────────────────┐│\n││{' '*(14-(len(item.name)//2))}{item.name}{' '*(14-(len(item.name)//2)-(len(item.name)%2))}││\n│└────────────────────────────┘│\n" for item in items_avail])
-        except:
-            raise Exception("pause here pwease")
-        self.items_str += "│                              │\n"*10
+        self.items_str = prep_items_str(items_avail)
         self.code = False
         
     def menu_str(self, w, pos):
@@ -57,7 +43,7 @@ class shop_menu(MenuAbstract):
                 self.submenu = not self.submenu
                 self.last_pos = self.cursor_pos
                 self.cursor_pos = 0
-                w.addstr(0, 0, self.base_str)
+                w.addstr(0, 0, base_str)
     
     def main(self):
         curses.wrapper(self.shop_menu)
@@ -108,10 +94,10 @@ class shop_menu(MenuAbstract):
             if self.cursor_pos == 2:
                 self.submenu = False
                 self.cursor_pos = self.last_pos
-                w.addstr(0, 0, self.base_str)
+                w.addstr(0, 0, base_str)
     
     def render_submenu(self, w):
-        for p, i in enumerate(self.prep_submenu_text(w)[:-1]):
+        for p, i in enumerate(prep_submenu_text(self.items_avail[self.last_pos].name)[:-1]):
             w.addstr(4+p, 31, i)
         if self.cursor_pos == 0:
             w.chgat(10, 35, 3, curses.A_REVERSE)
@@ -120,54 +106,11 @@ class shop_menu(MenuAbstract):
         elif self.cursor_pos == 2:
             w.chgat(12, 34, 5, curses.A_REVERSE)
             
-    
-    def prep_submenu_text(self, w):
-        # Returns a list of strings to print for each row bc that's how curses 
-        # works
-        name = self.items_avail[self.last_pos].name
-        if len(name) == 0:
-            raise Exception("You can't do that")
-        if len(name) in range(10):
-            return [f"│{' '*(4-len(name)//2)}{name}{' '*(5-len(name)//2-(len(name)%2))}│",
-                    "│         │",
-                    "│         │",
-                    "│         │",
-                    "│         │",
-                    "├─────────┤",
-                    "│   buy   │",
-                    "│ details │",
-                    "│  close  │",
-                   0]
-        elif len(name) in range(10, 19):
-            return [f"│{name[0:9]}│",
-                    f"│{' '*(4-len(name[9:19])//2)}{name[9:19]}{' '*(5-len(name[9:19])//2-(len(name[9:19])%2))}│",
-                    "│         │",
-                    "│         │",
-                    "│         │",
-                    "├─────────┤",
-                    "│   buy   │",
-                    "│ details │",
-                    "│  close  │",
-                   1]
-        elif len(name) in range(19, 28):
-            return [f"│{name[0:9]}│",
-                    f"│{name[9:19]}│"
-                    f"│{' '*(4-len(name[19:28])//2)}{name[19:28]}{' '*(5-len(name[19:28])//2-(len(name[19:28])%2))}│",
-                    "│         │",
-                    "│         │",
-                    "├─────────┤",
-                    "│   buy   │",
-                    "│ details │",
-                    "│  close  │",
-                   0]
-        else:
-            raise Exception("You can't do that")
-            
   
     def shop_menu(self, w):
         w.clear()
         curses.curs_set(0)
-        w.addstr(0,0, self.base_str)
+        w.addstr(0,0, base_str)
         while True:
             w.addstr(20, 0, str(self.resources))
             if not self.submenu:
@@ -189,20 +132,7 @@ class shop_menu(MenuAbstract):
         price = item.price
         description = item.description
         description += " "*(241-len(description))
-        w.addstr(0, 0, "┌────────────────────────────────────────┐\n"
-               f"│{name.center(40)}│\n"
-                "├─────────┬──────────────────────────────┤\n"
-               f"│rock:    │                              │\n"
-               f"│{price[0]}{' '*(9-len(str(price[0])))}│                              │\n"
-               f"│paper:   │                              │\n"
-               f"│{price[1]}{' '*(9-len(str(price[1])))}│                              │\n"
-               f"│scissors:│                              │\n"
-               f"│{price[2]}{' '*(9-len(str(price[2])))}│                              │\n"
-               f"│         │                              │\n"
-               f"│         │                              │\n"
-                "├─────────┴──────────────────────────────┤\n"
-                "│         Press any key to exit.         │\n"
-                "└────────────────────────────────────────┘\n")
+        w.addstr(0, 0, prep_details_str(item))
         w.addstr(3, 11, description[0:30])
         w.addstr(4, 11, description[30:60])
         w.addstr(5, 11, description[60:90])
