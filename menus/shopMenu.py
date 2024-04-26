@@ -1,5 +1,6 @@
 import curses
 from menuAbstract import MenuAbstract
+from definitions import rps
 from graphics import base_str
 from graphics import prep_items_str
 from graphics import prep_submenu_text
@@ -27,23 +28,23 @@ class shop_menu(MenuAbstract):
             w.addstr(4+p, 0, i)
 
     def Input(self, w):
-        char = w.getch()
-        if char == 258 and self.cursor_pos <= len(self.items_avail) - 2 and len(self.items_avail) != 0:
-            self.cursor_pos += 1
-        
-        if char == 259 and self.cursor_pos >= 0 and len(self.items_avail) != 0:
-            self.cursor_pos -= 1
-        
-        if len(self.items_avail) == 0:
+        bounds = len(self.items_avail)
+        outside = bounds != 0
+        if not outside:
             self.cursor_pos = -1
-        if char == 10:
-            if self.cursor_pos == -1:
-                self.code = True
-            else:
-                self.submenu = not self.submenu
-                self.last_pos = self.cursor_pos
-                self.cursor_pos = 0
-                w.addstr(0, 0, base_str)
+        else:
+            match (w.getch(), outside):
+                case (258, True) if self.cursor_pos <= bounds - 2:
+                    self.cursor_pos += 1
+                case (259, True) if self.cursor_pos >= 0:
+                    self.cursor_pos -= 1
+                case (10, False):
+                    self.code = True
+                case (10, True):
+                    self.submenu = not self.submenu
+                    self.last_pos = self.cursor_pos
+                    self.cursor_pos = 0
+                    w.addstr(0, 0, base_str)
     
     def main(self):
         curses.wrapper(self.shop_menu)
@@ -102,7 +103,7 @@ class shop_menu(MenuAbstract):
                 self.menu_str(w, self.cursor_pos)
                 self.Input(w)
                 if self.code:
-                    return 6
+                    return rps.home
                 self.render_selection(w)
             if self.submenu:
                 self.menu_str(w, self.last_pos)

@@ -18,10 +18,10 @@ class status(Enum):
 
 @dataclass
 class item:
-    name: string
+    name: str
     price: tuple[int, int, int]
-    description: string
-    bonus: tuple[string, float]
+    description: str
+    bonus: tuple[str, float]
 
 items = [
     item("quarry", (5, 0, 0), "Increases rock production by 50%", (r"%rock", 0.5)),
@@ -35,16 +35,16 @@ items = [
 
 def game_logic(self, uinput):
         match uinput:
-            case(rps.paper, rps.rock) |
-                (rps.scissors, rps.paper) |
+            case(rps.paper, rps.rock) |\
+                (rps.scissors, rps.paper) |\
                 (rps.rock, rps.scissors):
                 return status.win
-            case(rps.rock, rps.paper) |
-                (rps.paper, rps.scissors) |
+            case(rps.rock, rps.paper) |\
+                (rps.paper, rps.scissors) |\
                 (rps.scissors, rps.rock):
                 return status.lose
-            case(rps.rock, rps.rock) | 
-                (rps.paper, rps.paper) |
+            case(rps.rock, rps.rock) |\
+                (rps.paper, rps.paper) |\
                 (rps.scissors, rps.scissors):
                 return status.tie
             case(-1, _):
