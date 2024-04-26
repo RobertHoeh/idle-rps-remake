@@ -16,9 +16,9 @@ class home_menu(MenuAbstract):
         menu_pos = (((11, 5), (11, 19), (11, 32)), ((13, 5), (13, 17), (13, 34)))
         super().__init__(menu_items, menu_pos)
         self.last_move = last_move
-        self.money = 0
         self.resources = resources
         self.show_end_scr = show_end_scr
+    
     def main(self):
         curses.wrapper(self.home)
 
@@ -36,8 +36,7 @@ class home_menu(MenuAbstract):
         curses.curs_set(0)
         w.clear()
         w.addstr(0, 0, main_menu_text(
-            win_text(self.game_logic(self.last_move, True)),
-            self.resources))
+            win_text(self.game_logic(self.last_move, True)),self.resources))
         
         if self.last_move[0] < 3 or self.last_move[1] < 3:
             player_graphic = graphics_list[self.last_move[0]].splitlines()
@@ -61,21 +60,17 @@ class home_menu(MenuAbstract):
                     w.clear()
                     w.addstr(0, 0, "wait, that's illegal")
 
-    def game_logic(self, input, ig_ran):
-        """If ig_ran = true, ingores random and takes a two integer list entry
-        If not, generates a random number for ai_input"""
-        ai_input = input[1]
-        input = input[0]
-        
-        if ai_input == rps.rock and input == rps.paper or\
-        ai_input == rps.paper and input == rps.scissors or\
-        ai_input == rps.scissors and input == rps.rock:
-            return status.win
-        elif input == rps.rock and ai_input == rps.paper or\
-        input == rps.paper and ai_input == rps.scissors or\
-        input == rps.scissors and ai_input == rps.rock:
-            return status.loss
-        elif input == -1:
-            return status.invalid
-        else:
-            return status.tie
+    def game_logic(self, uinput):
+        match uinput:
+            case(rps.paper, rps.rock) |
+                (rps.scissors, rps.paper) |
+                (rps.rock, rps.scissors):
+                return status.win
+            case(rps.rock, rps.paper) |
+                (rps.paper, rps.scissors) |
+                (rps.scissors, rps.rock):
+                return status.lose
+            case(-1, _):
+                return status.invalid
+            case _:
+                return status.tie
