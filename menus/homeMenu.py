@@ -2,9 +2,8 @@ from menuAbstract import MenuAbstract
 import curses
 from graphics import graphics_list
 from graphics import main_menu_text
-from definitions import rps
 from definitions import status
-from defintiions import game_logic
+from definitions import game_logic
 
 class home_menu(MenuAbstract):
     def __init__(self, last_move, resources, show_end_scr):
@@ -50,7 +49,7 @@ class home_menu(MenuAbstract):
             ai_graphic = graphics_list[self.last_move[1]].splitlines()
             for i in range(6):
                 w.addstr(i+1, 1, player_graphic[i])
-                w.addstr(i+1, 24, self.reversed(ai_graphic[i])
+                w.addstr(i+1, 24, self.reversed(ai_graphic[i]))
         if self.show_end_scr:
             w.addstr(19, 0, "You have not yet unlocked the end screen!")
         while True:
