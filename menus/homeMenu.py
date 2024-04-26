@@ -27,16 +27,22 @@ class home_menu(MenuAbstract):
                         ")" if i == "(" else
                         i for i in var[::-1]])
 
+    def status_text(self, status):
+        match status:
+            case status.invalid:
+                return " "*41
+            case status.win:
+                return f"{' '*15}Player Won!{' '*15}"
+            case status.lose:
+                return f"{' '*17}AI Won!{' '*17}"
+            case _:
+                return f"{' '*15}Nobody Won!{' '*15}"
+
     def home(self, w):
-        win_text = lambda b:\
-            f"{' '*41}" if b == -1 else\
-            f"{' '*15}Player Won!{' '*15}" if b == 1 else\
-            f"{' '*17}AI Won!{' '*17}" if b == 2 else\
-            f"{' '*15}Nobody Won!{' '*15}"
         curses.curs_set(0)
         w.clear()
         w.addstr(0, 0, main_menu_text(
-            win_text(self.game_logic(self.last_move, True)),self.resources))
+            self.status_text(self.game_logic(self.last_move, True)),self.resources))
         
         if self.last_move[0] < 3 or self.last_move[1] < 3:
             player_graphic = graphics_list[self.last_move[0]].splitlines()
