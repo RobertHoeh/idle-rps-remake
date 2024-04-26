@@ -1,8 +1,4 @@
-import curses,
-       os,
-       time,
-       math,
-       sys
+import curses, os, time, math, sys, json
 import random as rand
 from menus.startMenu import start_menu
 from menus.shopMenu import shop_menu
@@ -63,10 +59,9 @@ class game:
                 case rps.end:
                     if self.end_scr:
                         self.display_end_screen(w)
-                        code = rps.home
                     else:
                         show_end_scr = True
-                        code = rps.home
+                    code = rps.home
                 case rps.save:
                     self.write_save()
                     sys.exit()
@@ -94,16 +89,16 @@ class game:
             self.items_purchased.append(item)
 
     def custom(self, item):
-        if item.name == "Autoclicker" or item.name == "Always on":
-            self.rate *= 2
-        if item.name == "End Screen":
-            self.end_scr = True
+        match item.name:
+            case "Autoclicker" | "Always on":
+                self.rate *= 2
+            case "End Screen":
+                self.end_scr = True
 
     def display_end_screen(self, w):
         w.clear()
         char = -1
-        graphics = end_screen
-        for p, i in enumerate(graphics):
+        for p, i in enumerate(end_screen):
             w.addstr(p, 0, i)
         while char == -1:
             char = w.getch()
@@ -137,7 +132,14 @@ class game:
             case _:
                 raise Exception("Unsupported platform!")
 
-        f.write(f"{time.time()}\n{self.resources[rps.rock]}\n{self.resources[rps.paper]}\n{self.resources[rps.scissors]}\n{self.rate}\n{"\n".join([i.name for i in self.items_purchased])}")
+        f.write(json.dumps(
+            {
+                "time": time.time(),
+                "resources": self.resources,
+                "rate": self.rate,
+                "items_purchased": self.items_purchased
+            }
+        ))
         f.close()
 
     def read_save(self):
@@ -150,14 +152,13 @@ class game:
                 case _:
                     raise Exception("Unsupported platform!")
 
-        save = f.readlines()
+        save = json.loads(f.readline())
         f.close()
-        self.rate = float(save[4])
-        for i in items:
-            if save.count(i.name) != 0:
-                self.buy(i, True)
-        deltat = math.floor(time.time() - float(save[0]))
-        self.resources = [math.ceil(float(save[1]) + ((self.increases[0] + self.increases[3]) * deltat * self.rate * (2/9))),
-                          math.ceil(float(save[2]) + ((self.increases[1] + self.increases[3]) * deltat * self.rate * (2/9))),
-                          math.ceil(float(save[3]) + ((self.increases[2] + self.increases[3]) * deltat * self.rate * (2/9)))]
+        self.rate = save["rate"]
+        for item in save["items_purchased"]:
+            self.buy(item, save)
+        deltat = math.floor(time.time() - save["time"])
+        self.resources = [math.ceil(save["resources"][0] + ((self.increases[0] + self.increases[3]) * deltat * self.rate * (2/9))),
+                          math.ceil(save["resources"][1] + ((self.increases[1] + self.increases[3]) * deltat * self.rate * (2/9))),
+                          math.ceil(save["resources"][2] + ((self.increases[2] + self.increases[3]) * deltat * self.rate * (2/9)))]
         # ^ I know this is generally a bad idea, but it should work fine in this case
