@@ -63,22 +63,23 @@ class shop_menu(MenuAbstract):
             w.chgat(5, 0, 42, curses.A_NORMAL)
 
     def submenu_input(self, w):
-        char = w.getch()
-        if char == 258 and self.cursor_pos <= 1:
-            self.cursor_pos += 1
-            return None
-        if char == 259 and self.cursor_pos >= 1:
-            self.cursor_pos -= 1
-            return None
-        if char == 10:
-            if self.cursor_pos == 0:
-                return(self.items_avail[self.cursor_pos])
-            if self.cursor_pos == 1:
-                self.details(w)
-            if self.cursor_pos == 2:
-                self.submenu = False
-                self.cursor_pos = self.last_pos
-                w.addstr(0, 0, base_str)
+        match w.getch():
+            case 258 if self.cursor_pos <= 1:
+                self.cursor_pos += 1
+                return None
+            case 259 if self.cursor_pos >= 1:
+                self.cursor_pos -= 1
+                return None
+            case 10:
+                match self.cursor_pos:
+                    case 0:
+                        return(self.items_avail[self.cursor_pos])
+                    case 1:
+                        self.details(w)
+                    case 2:
+                        self.submenu = False
+                        self.cursor_pos = self.last_pos
+                        w.addstr(0, 0, base_str)
     
     def render_submenu(self, w):
         for p, i in enumerate(prep_submenu_text(self.items_avail[self.last_pos].name)[:-1]):
