@@ -7,7 +7,10 @@ import random as rand
 from menus.startMenu import start_menu
 from menus.shopMenu import shop_menu
 from menus.homeMenu import home_menu
-from definitions import rps, items
+from definitions import rps
+from definitions import items
+from definitions import game_logic
+from definitions import status
 from graphics import end_screen
 
 
@@ -44,15 +47,15 @@ class game:
         while True:
             if code == rps.rock:
                 self.last_turn = [0, rand.randint(0,2)]
-                self.resources[0] += self.game_logic(self.last_turn)*self.increases[0]*self.increases[3]
+                self.resources[0] += game_logic(self.last_turn)*self.increases[0]*self.increases[3] == status.win
                 code = rps.home
             elif code == rps.paper:
                 self.last_turn = [1, rand.randint(0,2)]
-                self.resources[1] += self.game_logic(self.last_turn)*self.increases[1]*self.increases[3]
+                self.resources[1] += game_logic(self.last_turn)*self.increases[1]*self.increases[3] == status.win
                 code = rps.home
             elif code == rps.scissors:
                 self.last_turn = [2, rand.randint(0,2)]
-                self.resources[2] += self.game_logic(self.last_turn)*self.increases[2]*self.increases[3]
+                self.resources[2] += game_logic(self.last_turn)*self.increases[2]*self.increases[3] == status.win
                 code = rps.home
             elif code == rps.shop:
                 menu = shop_menu(self.resources, self.items)
@@ -75,35 +78,13 @@ class game:
                 self.buy(code, False)
                 code = rps.shop
 
-    def game_logic(self, input):
-        """If ig_ran = true, ingores random and takes a two integer list entry
-        If not, generates a random number for ai_input
-        0 = rock
-        1 = paper
-        2 = scissors"""
-        ai_input = input[1]
-        input = input[0]
-        
-        if ai_input == rps.rock and input == rps.paper or\
-        ai_input == rps.paper and input == rps.scissors or\
-        ai_input == rps.scissors and input == rps.rock:
-            return True
-        elif input == rps.rock and ai_input == rps.paper or\
-        input == rps.paper and ai_input == rps.scissors or\
-        input == rps.scissors and ai_input == rps.rock:
-            return False
-        elif input == ai_input:
-            return True
-        else:
-            raise Exception("unexpected game_logic value.")
-
     def buy(self, item, BYPASS):
-        type = item[3][0]
-        inc = item[3][1]
-        resources = item[1]
+        type = item.bonus[0]
+        inc = item.bonus[1]
+        resources = item.resources
         avail = all([x>=y for x, y in zip(self.resources, resources)])
         if avail or BYPASS:
-            if type != r"CUSTOM":
+            if type != r"%CUSTOM":
                 self.increases[[r"%rock", r"%paper", r"%scissors", r"%all"].index(type)] += inc
             else:
                 self.custom(item)
@@ -113,9 +94,9 @@ class game:
             self.items_purchased.append(item)
 
     def custom(self, item):
-        if item[0] == "Autoclicker" or item[0] == "Always on":
+        if item.name == "Autoclicker" or item.name == "Always on":
             self.rate *= 2
-        if item[0] == "End Screen":
+        if item.name == "End Screen":
             self.end_scr = True
 
     def display_end_screen(self, w):
@@ -143,6 +124,8 @@ class game:
         else:
             raise Exception("Unsupported platform!")
 
+
+    """TODO: implement JSON saving"""
     def write_save(self):
         nl = "\n"
         if not os.path.exists(f"{self.get_game_dir()}/game_save.txt"):
@@ -162,7 +145,7 @@ class game:
         # https://stackoverflow.com/questions/8220108/how-do-i-check-the-operating-system-in-python
         # ^ used for most platform checking
 
-        f.write(f"{time.time()}\n{self.resources[rps.rock]}\n{self.resources[rps.paper]}\n{self.resources[rps.scissors]}\n{self.rate}\n{nl.join([i[0] for i in self.items_purchased])}")
+        f.write(f"{time.time()}\n{self.resources[rps.rock]}\n{self.resources[rps.paper]}\n{self.resources[rps.scissors]}\n{self.rate}\n{nl.join([i.name for i in self.items_purchased])}")
         f.close()
 
     def read_save(self):
@@ -177,9 +160,10 @@ class game:
                 raise Exception("Unsupported platform!")
 
         save = f.readlines()
+        f.close()
         self.rate = float(save[4])
         for i in self.items:
-            if save.count(i[0]) != 0:
+            if save.count(i.name) != 0:
                 self.buy(i, True)
         deltat = math.floor(time.time() - float(save[0]))
         self.resources = [math.ceil(float(save[1]) + ((self.increases[0] + self.increases[3]) * deltat * self.rate * (2/9))),

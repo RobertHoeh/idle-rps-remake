@@ -4,6 +4,7 @@ from graphics import graphics_list
 from graphics import main_menu_text
 from definitions import rps
 from definitions import status
+from defintiions import game_logic
 
 class home_menu(MenuAbstract):
     def __init__(self, last_move, resources, show_end_scr):
@@ -42,7 +43,7 @@ class home_menu(MenuAbstract):
         curses.curs_set(0)
         w.clear()
         w.addstr(0, 0, main_menu_text(
-            self.status_text(self.game_logic(self.last_move, True)),self.resources))
+            self.status_text(game_logic(self.last_move, True)),self.resources))
         
         if self.last_move[0] < 3 or self.last_move[1] < 3:
             player_graphic = graphics_list[self.last_move[0]].splitlines()
@@ -65,18 +66,3 @@ class home_menu(MenuAbstract):
                 while True:
                     w.clear()
                     w.addstr(0, 0, "wait, that's illegal")
-
-    def game_logic(self, uinput):
-        match uinput:
-            case(rps.paper, rps.rock) |
-                (rps.scissors, rps.paper) |
-                (rps.rock, rps.scissors):
-                return status.win
-            case(rps.rock, rps.paper) |
-                (rps.paper, rps.scissors) |
-                (rps.scissors, rps.rock):
-                return status.lose
-            case(-1, _):
-                return status.invalid
-            case _:
-                return status.tie

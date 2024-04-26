@@ -32,3 +32,22 @@ items = [
     item("Always on", (60, 60, 60), "Doubles offline production again", (r"%CUSTOM", 0)),
     item("End Screen", (1000, 1000, 1000), "Gives you an end screen", (r"%CUSTOM", 0))
 ]
+
+def game_logic(self, uinput):
+        match uinput:
+            case(rps.paper, rps.rock) |
+                (rps.scissors, rps.paper) |
+                (rps.rock, rps.scissors):
+                return status.win
+            case(rps.rock, rps.paper) |
+                (rps.paper, rps.scissors) |
+                (rps.scissors, rps.rock):
+                return status.lose
+            case(rps.rock, rps.rock) | 
+                (rps.paper, rps.paper) |
+                (rps.scissors, rps.scissors):
+                return status.tie
+            case(-1, _):
+                return status.invalid
+            case _:
+                raise Exception("unexpected game_logic value")
