@@ -122,8 +122,7 @@ def prep_submenu_text(name):
                 "├─────────┤",
                 "│   buy   │",
                 "│ details │",
-                "│  close  │",
-                0]
+                "│  close  │"]
     elif len(name) in range(10, 19):
         return [f"│{name[0:9]}│",
                 f"│{' '*(4-len(name[9:19])//2)}{name[9:19]}{' '*(5-len(name[9:19])//2-(len(name[9:19])%2))}│",
@@ -133,8 +132,7 @@ def prep_submenu_text(name):
                 "├─────────┤",
                 "│   buy   │",
                 "│ details │",
-                "│  close  │",
-                1]
+                "│  close  │"]
     elif len(name) in range(19, 28):
         return [f"│{name[0:9]}│",
                 f"│{name[9:19]}│"
@@ -144,8 +142,7 @@ def prep_submenu_text(name):
                 "├─────────┤",
                 "│   buy   │",
                 "│ details │",
-                "│  close  │",
-                0]
+                "│  close  │"]
     else:
         raise Exception("You can't do that")
 
@@ -158,11 +155,11 @@ def prep_details_str(item):
 │{name.center(40)}│\n"
 ├─────────┬──────────────────────────────┤
 │rock:    │                              │
-│{price[0]}{' '*(9-len(str(price[0])))}│                              │\n"
+│{price[0]}{' '*(9-len(str(price[0])))}│                              │
 │paper:   │                              │
-│{price[1]}{' '*(9-len(str(price[1])))}│                              │\n"
+│{price[1]}{' '*(9-len(str(price[1])))}│                              │
 │scissors:│                              │
-│{price[2]}{' '*(9-len(str(price[2])))}│                              │\n"
+│{price[2]}{' '*(9-len(str(price[2])))}│                              │
 │         │                              │
 │         │                              │
 ├─────────┴──────────────────────────────┤
