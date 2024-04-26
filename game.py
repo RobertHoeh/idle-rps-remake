@@ -127,37 +127,28 @@ class game:
 
     """TODO: implement JSON saving"""
     def write_save(self):
-        nl = "\n"
         if not os.path.exists(f"{self.get_game_dir()}/game_save.txt"):
-            # https://www.pythontutorial.net/python-basics/python-check-if-file-exists/
             self.create_save()
-        
-        if sys.platform == 'linux':
-            f = open(f"{self.get_game_dir()}/game_save.txt", "r+")
-        
-        elif sys.platform == 'nt':
-            f = open(f"{self.get_game_dir()}\\game_save.txt", "r+")
-        
-        else:
-            raise Exception("Unsupported platform!")
+        match sys.plaform:
+            case 'linux':
+                f = open(f"{self.get_game_dir()}/game_save.txt", "r+")
+            case 'nt':
+                f = open(f"{self.get_game_dir()}\\game_save.txt", "r+")
+            case _:
+                raise Exception("Unsupported platform!")
 
-        
-        # https://stackoverflow.com/questions/8220108/how-do-i-check-the-operating-system-in-python
-        # ^ used for most platform checking
-
-        f.write(f"{time.time()}\n{self.resources[rps.rock]}\n{self.resources[rps.paper]}\n{self.resources[rps.scissors]}\n{self.rate}\n{nl.join([i.name for i in self.items_purchased])}")
+        f.write(f"{time.time()}\n{self.resources[rps.rock]}\n{self.resources[rps.paper]}\n{self.resources[rps.scissors]}\n{self.rate}\n{"\n".join([i.name for i in self.items_purchased])}")
         f.close()
 
     def read_save(self):
         if os.path.exists(f"{self.get_game_dir()}/game_save.txt"):
-            if sys.platform == 'linux':
-                f = open(f"{self.get_game_dir()}/game_save.txt", "r")
-
-            elif sys.platform == 'nt':
-                f = open(f"{self.get_game_dir()}\\game_save.txt", "r")
-
-            else:
-                raise Exception("Unsupported platform!")
+            match sys.platform:
+                case 'linux':
+                    f = open(f"{self.get_game_dir()}/game_save.txt", "r")
+                case 'nt':
+                    f = open(f"{self.get_game_dir()}\\game_save.txt", "r")
+                case _:
+                    raise Exception("Unsupported platform!")
 
         save = f.readlines()
         f.close()
