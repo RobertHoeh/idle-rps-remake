@@ -14,25 +14,18 @@ class MenuAbstract:
         self.cursor_pos = [0, 0]
 
     def Input(self, w):
-        uin = w.getch()
-        if uin == 259:
-            self.cursor_pos[0] -= 1
-            return None
-
-        elif uin == 258:
-            self.cursor_pos[0] += 1
-            return None
-
-        elif uin == 261:
-            self.cursor_pos[1] += 1
-            return None
-
-        elif uin == 260:
-            self.cursor_pos[1] -= 1
-            return None
-
-        elif uin == 10:
-            return self.process_input(w)
+        match w.getch():
+            case 259:
+                self.cursor_pos[0] -= 1
+            case 258:
+                self.cursor_pos[0] += 1
+            case 261:
+                self.cursor_pos[1] += 1
+            case 260:
+                self.cursor_pos[1] -= 1
+            case 10:
+                return self.process_input(w)
+        return None
 
     def write_buffer(self, w):
         for p1, i in enumerate(self.menu_items):
