@@ -133,14 +133,9 @@ class shop_menu(MenuAbstract):
         description = item.description
         description += " "*(241-len(description))
         w.addstr(0, 0, prep_details_str(item))
-        w.addstr(3, 11, description[0:30])
-        w.addstr(4, 11, description[30:60])
-        w.addstr(5, 11, description[60:90])
-        w.addstr(6, 11, description[90:120])
-        w.addstr(7, 11, description[120:150])
-        w.addstr(8, 11, description[150:180])
-        w.addstr(9, 11, description[180:210])
-        w.addstr(10, 11, description[210:240])
+        for p, i in enumerate(range(30, 241, 30)):
+            w.addstr(p+3, 11, description[i-30,i])
+
     def details(self, w):
         self.details_str(w, self.items_avail[self.last_pos])
         while True:
