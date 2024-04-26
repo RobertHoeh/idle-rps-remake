@@ -30,7 +30,7 @@ class shop_menu(MenuAbstract):
 │                              │         │
 └──────────────────────────────┴─────────┘"""
         try:
-            self.items_str = "".join([f"│┌────────────────────────────┐│\n││{' '*(14-(len(item[0])//2))}{item[0]}{' '*(14-(len(item[0])//2)-(len(item[0])%2))}││\n│└────────────────────────────┘│\n" for item in items_avail])
+            self.items_str = "".join([f"│┌────────────────────────────┐│\n││{' '*(14-(len(item.name)//2))}{item.name}{' '*(14-(len(item.name)//2)-(len(item.name)%2))}││\n│└────────────────────────────┘│\n" for item in items_avail])
         except:
             raise Exception("pause here pwease")
         self.items_str += "│                              │\n"*10
@@ -66,7 +66,7 @@ class shop_menu(MenuAbstract):
         try:
             w.chgat(1, 0, 42, curses.A_NORMAL)
             w.chgat(5, 0, 42, curses.A_NORMAL)
-            item = self.items_avail[self.cursor_pos][0]
+            item = self.items_avail[self.cursor_pos].name
             if self.cursor_pos >= 0:
                 self.xpos = len(f"││{' '*(16-(len(item)//2))}")
                 w.chgat(5, self.xpos, len(item), curses.A_REVERSE)
@@ -124,7 +124,7 @@ class shop_menu(MenuAbstract):
     def prep_submenu_text(self, w):
         # Returns a list of strings to print for each row bc that's how curses 
         # works
-        name = self.items_avail[self.last_pos][0]
+        name = self.items_avail[self.last_pos].name
         if len(name) == 0:
             raise Exception("You can't do that")
         if len(name) in range(10):
@@ -185,19 +185,19 @@ class shop_menu(MenuAbstract):
             w.refresh()
 
     def details_str(self, w, item):
-        name = item[0]
-        resources = item[1]
-        description = item[2]
+        name = item.name
+        price = item.price
+        description = item.description
         description += " "*(241-len(description))
         w.addstr(0, 0, "┌────────────────────────────────────────┐\n"
                f"│{name.center(40)}│\n"
                 "├─────────┬──────────────────────────────┤\n"
                f"│rock:    │                              │\n"
-               f"│{resources[0]}{' '*(9-len(str(resources[0])))}│                              │\n"
+               f"│{price[0]}{' '*(9-len(str(price[0])))}│                              │\n"
                f"│paper:   │                              │\n"
-               f"│{resources[1]}{' '*(9-len(str(resources[1])))}│                              │\n"
+               f"│{price[1]}{' '*(9-len(str(price[1])))}│                              │\n"
                f"│scissors:│                              │\n"
-               f"│{resources[2]}{' '*(9-len(str(resources[2])))}│                              │\n"
+               f"│{price[2]}{' '*(9-len(str(price[2])))}│                              │\n"
                f"│         │                              │\n"
                f"│         │                              │\n"
                 "├─────────┴──────────────────────────────┤\n"

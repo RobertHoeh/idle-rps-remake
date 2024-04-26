@@ -1,13 +1,14 @@
-import curses
-import os
-import time
-import math
+import curses,
+       os,
+       time,
+       math,
+       sys
 import random as rand
-import sys
 from menus.startMenu import start_menu
 from menus.shopMenu import shop_menu
 from menus.homeMenu import home_menu
 from definitions import rps
+from definition import items
 
 
 class game:
@@ -20,13 +21,7 @@ class game:
     |trings for these. Use decimals (or fractions) for the percent values.       |
     ------------------------------------------------------------------------------"""
     def __init__(self):
-        self.items = [("quarry", (5, 0, 0), "Increases rock production by 50%", (r"%rock", 0.5)),
-                       ("forest", (0, 5, 0), "Increases paper production by 50%", (r"%paper", 0.5)),
-                       ("sharp blades", (0, 0, 5), "Increases scissors production by 50%", (r"%scissors", 0.5)),
-                       ("catapult", (10, 10, 10), "Increases all production by 10%", (r"%scissors", 0.1)),
-                       ("Autoclicker", (30, 30, 30), "Doubles offline production", (r"%CUSTOM", 0)),
-                       ("Always on", (60, 60, 60), "Doubles offline production again", (r"%CUSTOM", 0)),
-                       ("End Screen", (1000, 1000, 1000), "Gives you an end screen", (r"%CUSTOM", 0))]
+        self.items = items
         self.items_purchased = []
         self.last_turn = [-1, -1]
         self.increases = [1, 1, 1, 1]
