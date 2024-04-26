@@ -60,7 +60,7 @@ graphics_list = ["""\
 ---.__(___)       
 """]
 
-def main_menu_text(preptext: string, resources: tuple[int, int, int]):
+def main_menu_text(preptext: str, resources: tuple[int, int, int]):
     return "┌────────────────────┬────────────────────┐\n"+\
            "│                    │                    │\n"*7+\
            "├────────────────────┴────────────────────┤\n"+\
