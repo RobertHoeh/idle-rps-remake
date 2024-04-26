@@ -62,22 +62,6 @@ class shop_menu(MenuAbstract):
             w.chgat(1, 1, 40, curses.A_REVERSE)
             w.chgat(5, 0, 42, curses.A_NORMAL)
 
-
-#    def render_selection(self, w):
-#        # Highlight the quit button
-#        if self.cursor_pos == -1:
-#            w.chgat(1, 1, 40, curses.A_REVERSE)
-#        else:
-#            w.chgat(1, 0, 42, curses.A_NORMAL)
-#            
-#        # Highlight the selected menu item
-#        # Menu items don't highlight (I think replit's fault). Will fix later
-#        if self.cursor_pos >= 0:
-#            x_pos = 3 + 13 - (len(self.items_avail[self.cursor_pos][0]) // 2)
-#            w.chgat(5, x_pos, len(self.items_avail[self.cursor_pos][0]), curses.A_REVERSE)
-#        else:
-#            w.chgat(5, 0, 42, curses.A_NORMAL)
-
     def submenu_input(self, w):
         char = w.getch()
         if char == 258 and self.cursor_pos <= 1:
