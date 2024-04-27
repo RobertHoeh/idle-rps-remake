@@ -45,20 +45,20 @@ class Button:
     action: int | rps
 
 def game_logic(uinput):
-        match uinput:
-            case(rps.paper, rps.rock) |\
-                (rps.scissors, rps.paper) |\
-                (rps.rock, rps.scissors):
+        match uinput: # FOR SOME REASON rps ENUM WONT WORK
+            case[1, 0] |\
+                [2, 1] |\
+                [0, 2]:
                 return status.win
-            case(rps.rock, rps.paper) |\
-                (rps.paper, rps.scissors) |\
-                (rps.scissors, rps.rock):
-                return status.lose
-            case(rps.rock, rps.rock) |\
-                (rps.paper, rps.paper) |\
-                (rps.scissors, rps.scissors):
+            case[0, 1] |\
+                [1, 2] |\
+                [2, 0]:
+                return status.loss
+            case[0, 0] |\
+                [1, 1] |\
+                [2, 2]:
                 return status.tie
-            case(-1, -1):
+            case[-1, -1]:
                 return status.invalid
             case _:
                 raise Exception(f"unexpected game_logic value: {uinput}")

@@ -43,15 +43,15 @@ class game:
             match code:
                 case rps.rock:
                     self.last_turn = [0, rand.randint(0,2)]
-                    self.resources[0] += game_logic(self.last_turn)*self.increases[0]*self.increases[3] == status.win
+                    self.resources[0] += (game_logic(self.last_turn) == status.win)*self.increases[0]*self.increases[3]
                     code = rps.home
                 case rps.paper:
                     self.last_turn = [1, rand.randint(0,2)]
-                    self.resources[1] += game_logic(self.last_turn)*self.increases[1]*self.increases[3] == status.win
+                    self.resources[1] += (game_logic(self.last_turn) == status.win)*self.increases[1]*self.increases[3]
                     code = rps.home
                 case rps.scissors:
                     self.last_turn = [2, rand.randint(0,2)]
-                    self.resources[2] += game_logic(self.last_turn)*self.increases[2]*self.increases[3] == status.win
+                    self.resources[2] += (game_logic(self.last_turn) == status.win)*self.increases[2]*self.increases[3]
                     code = rps.home
                 case rps.shop:
                     menu = shop_menu(self.resources, items)

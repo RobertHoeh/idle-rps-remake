@@ -44,7 +44,7 @@ class home_menu(MenuAbstract):
                 return " "*41
             case status.win:
                 return f"{' '*15}Player Won!{' '*15}"
-            case status.lose:
+            case status.loss:
                 return f"{' '*17}AI Won!{' '*17}"
             case _:
                 return f"{' '*15}Nobody Won!{' '*15}"
@@ -60,7 +60,10 @@ class home_menu(MenuAbstract):
             ai_graphic = graphics_list[self.last_move[1]].splitlines()
             for i in range(6):
                 w.addstr(i+1, 1, player_graphic[i])
-                w.addstr(i+1, 24, self.reversed(ai_graphic[i]))
+                if self.last_move[1] == 0:
+                    w.addstr(i+1, 29, self.reversed(ai_graphic[i]))
+                else:
+                    w.addstr(i+1, 24, self.reversed(ai_graphic[i]))
         if self.show_end_scr:
             w.addstr(19, 0, "You have not yet unlocked the end screen!")
         while True:
