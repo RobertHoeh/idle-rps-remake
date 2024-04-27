@@ -117,8 +117,8 @@ class shop_menu():
         description = item.description
         description += " "*(241-len(description))
         w.addstr(0, 0, prep_details_str(item))
-        for p, i in enumerate(range(30, 241, 30)):
-            w.addstr(p+3, 11, description[i-30,i])
+        for p in enumerate(range(30, 241, 30)):
+            w.addstr(p[0]+3, 11, description[p[1]-30,p[1]])
 
     def details(self, w):
         self.details_str(w, self.items_avail[self.last_pos])

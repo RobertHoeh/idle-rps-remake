@@ -104,7 +104,7 @@ base_str = """┌─────────────────────
 └──────────────────────────────┴─────────┘"""
 
 def prep_items_str(items_avail):
-    return "".join(
+    return "\n".join(
         [f"""│┌────────────────────────────┐│
 ││{' '*(14-(len(item.name)//2))}{item.name}{' '*(14-(len(item.name)//2)-(len(item.name)%2))}││
 │└────────────────────────────┘│""" for item in items_avail]
