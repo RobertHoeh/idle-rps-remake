@@ -1,9 +1,9 @@
-from menuAbstract import MenuAbstract
 import curses
-from graphics import graphics_list
-from graphics import main_menu_text
-from definitions import status
-from definitions import game_logic
+import menus.menuAbstract
+from menus import menuAbstract
+from menus.menuAbstract import MenuAbstract
+from graphics import graphics_list, main_menu_text
+from definitions import status, game_logic
 
 class home_menu(MenuAbstract):
     def __init__(self, last_move, resources, show_end_scr):

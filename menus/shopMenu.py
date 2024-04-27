@@ -1,10 +1,9 @@
 import curses
-from menuAbstract import MenuAbstract
+import menus.menuAbstract
+from menus import menuAbstract
+from menus.menuAbstract import MenuAbstract
 from definitions import rps
-from graphics import base_str
-from graphics import prep_items_str
-from graphics import prep_submenu_text
-from graphics import prep_details_str
+from graphics import base_str, prep_items_str, prep_submenu_text, prep_details_str
 
 class shop_menu(MenuAbstract):
     def __init__(self, resources, items_avail):
