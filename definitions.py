@@ -33,7 +33,18 @@ items = [
     item("End Screen", (1000, 1000, 1000), "Gives you an end screen", (r"%CUSTOM", 0))
 ]
 
-def game_logic(self, uinput):
+@dataclass
+class Pos:
+    x: int
+    y: int
+
+@dataclass
+class Button:
+    name: str
+    pos: Pos
+    action: function | int | rps
+
+def game_logic(uinput):
         match uinput:
             case(rps.paper, rps.rock) |\
                 (rps.scissors, rps.paper) |\
@@ -47,7 +58,7 @@ def game_logic(self, uinput):
                 (rps.paper, rps.paper) |\
                 (rps.scissors, rps.scissors):
                 return status.tie
-            case(-1, _):
+            case(-1, -1):
                 return status.invalid
             case _:
-                raise Exception("unexpected game_logic value")
+                raise Exception(f"unexpected game_logic value: {uinput}")

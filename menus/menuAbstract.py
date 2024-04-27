@@ -1,4 +1,5 @@
 import curses
+from definitions import Button, Pos, rps
 
 class MenuAbstract:
     """A base menu class for methods to make making menus in this game easier.
@@ -8,40 +9,35 @@ class MenuAbstract:
     next class, stores global variables, and calls curses.wrapper() inside it.
     """
 
-    def __init__(self, menu_items, menu_pos):
-        self.menu_items = menu_items
-        self.menu_pos = menu_pos
-        self.cursor_pos = [0, 0]
+    def __init__(self, buttons: list[list[Button]]):
+        self.buttons: list[list[Button]] = buttons
+        self.cursor_pos: Pos = Pos(0, 0)
 
     def Input(self, w):
         match w.getch():
-            case 259:
-                self.cursor_pos[0] -= 1
-            case 258:
-                self.cursor_pos[0] += 1
-            case 261:
-                self.cursor_pos[1] += 1
-            case 260:
-                self.cursor_pos[1] -= 1
-            case 10:
+            case curses.KEY_UP:
+                self.cursor_pos.y -= 1
+            case curses.KEY_DOWN:
+                self.cursor_pos.y += 1
+            case curses.KEY_RIGHT:
+                self.cursor_pos.x += 1
+            case curses.KEY_LEFT:
+                self.cursor_pos.x -= 1
+            case curses.KEY_ENTER:
                 return self.process_input(w)
         return None
 
     def write_buffer(self, w):
-        for p1, i in enumerate(self.menu_items):
-            for p2, v in enumerate(i):
-                if self.menu_items[self.cursor_pos[0] % len(self.menu_items)]\
-                        [self.cursor_pos[1] % len(i)] == v:
-                    w.addstr(self.menu_pos[p1][p2][0],
-                             self.menu_pos[p1][p2][1],
-                             v,
-                             curses.A_REVERSE)
-                else:
-                    w.addstr(self.menu_pos[p1][p1][0],
-                             self.menu_pos[p1][p2][1],
-                             v)
+        for p1, _ in enumerate(self.buttons):
+            for p2, button in enumerate(_):
+                w.addstr(button.pos.y
+                            button.pos.x,
+                            button.text,
+                            curses.A_REVERSE
+                            if button.pos == self.cursor_pos
+                            else curses.A_NORMAL)
         w.refresh()
 
     def process_input(self, w):
-        act = self.menu_items[self.cursor_pos[0]][self.cursor_pos[1]]
-        return ["rock", "paper", "scissors", "shop", "End Screen", "exit", "start"].index(act)
+        button = self.buttons[self.cursor_pos.y][self.cursor_pos.x]
+        return button.action
