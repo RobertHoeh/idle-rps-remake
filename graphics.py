@@ -68,7 +68,7 @@ def main_menu_text(preptext: str, resources: tuple[int, int, int]):
            "├────────────┬───────────────┬────────────┤\n"+\
            "│    rock    │     paper     │  scissors  │\n"+\
            "├────────────┼───────────────┼────────────┤\n"+\
-           "│    shop    │   End Screen  │    exit    │\n"+\
+           "│    shop    │   end screen  │    exit    │\n"+\
            "├────────────┼───────────────┼────────────┤\n"+\
            "│    rock    │     paper     │  scissors  │\n"+\
           f"│{str(resources[0]).center(12)}│{str(resources[1]).center(15)}│{str(resources[2]).center(12)}│\n"+\
