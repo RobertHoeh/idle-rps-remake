@@ -151,8 +151,12 @@ class game:
                     f = open(f"{self.get_game_dir()}\\game_save.txt", "r")
                 case _:
                     raise Exception("Unsupported platform!")
-
-        save = json.loads(f.readline())
+        else:
+            return
+        save = f.readline()
+        if save == "":
+            return
+        save = json.loads(save)
         f.close()
         self.rate = save["rate"]
         for item in save["items_purchased"]:
