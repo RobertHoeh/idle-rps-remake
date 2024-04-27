@@ -9,9 +9,13 @@ class MenuAbstract:
     next class, stores global variables, and calls curses.wrapper() inside it.
     """
 
-    def __init__(self, buttons: list[list[Button]]):
+    def __init__(
+        self,
+        buttons: list[list[Button]],
+        cursor_pos: Pos = Pos(0, 0)
+    ):
         self.buttons: list[list[Button]] = buttons
-        self.cursor_pos: Pos = Pos(0, 0)
+        self.cursor_pos: Pos = cursor_pos
 
     def Input(self, w):
         match w.getch():
