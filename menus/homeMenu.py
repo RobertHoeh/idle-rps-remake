@@ -3,7 +3,7 @@ import menus.menuAbstract
 from menus import menuAbstract
 from menus.menuAbstract import MenuAbstract
 from graphics import graphics_list, main_menu_text
-from definitions import status, game_logic
+from definitions import status, game_logic, Button, Pos
 
 class home_menu(MenuAbstract):
     def __init__(self, last_move, resources, show_end_scr):
@@ -12,9 +12,20 @@ class home_menu(MenuAbstract):
         0 = rock
         1 = paper
         2 = scissors"""
-        menu_items = (("rock", "paper", "scissors"), ("shop", "End Screen", "exit"))
-        menu_pos = (((11, 5), (11, 19), (11, 32)), ((13, 5), (13, 17), (13, 34)))
-        super().__init__(menu_items, menu_pos)
+        buttons = [
+            [
+                Button("rock",      Pos(11, 5),   rps.rock),
+                Button("paper",     Pos(11, 19),  rps.paper),
+                Button("scissors",  Pos(11, 32),  rps.scissors)
+            ],
+            [
+                Button("shop",       Pos(13, 5),  rps.shop),
+                Button("end screen", Pos(13, 17), rps.end),
+                Button("exit",       Pos(13, 34), rps.save)
+            ]
+        ]
+        super().__init__(buttons)
+
         self.last_move = last_move
         self.resources = resources
         self.show_end_scr = show_end_scr
@@ -42,7 +53,7 @@ class home_menu(MenuAbstract):
         curses.curs_set(0)
         w.clear()
         w.addstr(0, 0, main_menu_text(
-            self.status_text(game_logic(self.last_move, True)),self.resources))
+            self.status_text(game_logic(self.last_move)),self.resources))
         
         if self.last_move[0] < 3 or self.last_move[1] < 3:
             player_graphic = graphics_list[self.last_move[0]].splitlines()
