@@ -35,14 +35,14 @@ items = [
 
 @dataclass
 class Pos:
-    x: int
     y: int
+    x: int
 
 @dataclass
 class Button:
-    name: str
+    text: str
     pos: Pos
-    action: function | int | rps
+    action: int | rps
 
 def game_logic(uinput):
         match uinput:
