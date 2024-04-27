@@ -3,7 +3,7 @@ import menus.menuAbstract
 from menus import menuAbstract
 from menus.menuAbstract import MenuAbstract
 from graphics import graphics_list, main_menu_text
-from definitions import status, game_logic, Button, Pos
+from definitions import status, game_logic, Button, Pos, rps
 
 class home_menu(MenuAbstract):
     def __init__(self, last_move, resources, show_end_scr):
@@ -65,13 +65,13 @@ class home_menu(MenuAbstract):
             w.addstr(19, 0, "You have not yet unlocked the end screen!")
         while True:
             try:
+                # write buffer: includes graphical renditions.
+                super().write_buffer(w)
+
                 # get input and change cursor_pos correspondingly
                 rcode = super().Input(w)
                 if rcode != None:
                     return rcode
-
-                # write buffer: includes graphical renditions.
-                super().write_buffer(w)
             except IndexError:
                 while True:
                     w.clear()
