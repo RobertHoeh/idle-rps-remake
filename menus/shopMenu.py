@@ -1,11 +1,8 @@
 import curses
-import menus.menuAbstract
-from menus import menuAbstract
-from menus.menuAbstract import MenuAbstract
 from definitions import rps
 from graphics import base_str, prep_items_str, prep_submenu_text, prep_details_str
 
-class shop_menu(MenuAbstract):
+class shop_menu():
     def __init__(self, resources, items_avail):
         """resources is a dict of the resources available to the player as
         well as their amounts. items_avail is a list of the items available
@@ -13,7 +10,9 @@ class shop_menu(MenuAbstract):
         a tuple including their name, a tuple for resources needed, and the
         item's description. Item names cannot be more than 27 characters long, 
         however the recommended limit is 9 characters. Everything past that 
-        starts getting kinda weird."""
+        starts getting kinda weird.
+        TODO: make shop_menu use menuAbstract
+        """
         
         self.resources = resources
         self.items_avail = items_avail
